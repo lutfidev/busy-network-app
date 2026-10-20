@@ -10,6 +10,7 @@ import 'data/progress_store.dart';
 import 'data/settings_store.dart';
 import 'feedback/audio_sound_out.dart';
 import 'feedback/game_feedback.dart';
+import 'music/audio_music_out.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ Future<void> main() async {
           sound: AudioSoundOut(),
           haptics: const SystemHaptics(),
         ),
+        music: AudioMusicOut(),
       ),
     ),
   );

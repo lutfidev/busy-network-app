@@ -35,6 +35,10 @@ void main() {
     expect(find.byType(SettingsScreen), findsOneWidget);
     expect(find.text('Efek suara'), findsOneWidget);
     expect(find.text('Getar'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Musik')).dy,
+      lessThan(tester.getTopLeft(find.text('Efek suara')).dy),
+    );
 
     await tester.tap(find.bySemanticsLabel('Kembali ke Beranda'));
     await tester.pumpAndSettle();
@@ -66,6 +70,19 @@ void main() {
     await tester.pumpAndSettle();
     expect(session.settings.settings.sound, isTrue);
     expect(out.sounds, [Cue.tap]);
+  });
+
+  testWidgets('sakelar Musik mengubah & menyimpan setelan', (tester) async {
+    setScreenSize(tester, const Size(390, 844));
+    final store = MemorySettingsStore();
+    final session = GameSession(
+      feedback: GameFeedback(settings: SettingsBook(store)),
+    );
+    await pumpApp(tester, location: AppRoutes.settings, session: session);
+    await tester.tap(find.text('Musik'));
+    await tester.pumpAndSettle();
+    expect(session.settings.settings.music, isFalse);
+    expect(store.load(), const Settings(music: false));
   });
 
   testWidgets('sakelar terbaca pembaca layar', (tester) async {

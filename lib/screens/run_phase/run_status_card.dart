@@ -26,8 +26,7 @@ class RunStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final level = day.level;
     final target = level.targetSatisfaction;
-    final now = day.minute;
-    final rush = now >= day.rushFrom * 60 && now < day.rushTo * 60;
+    final rush = day.inRush;
     final satisfaction = day.satisfaction;
     return AppCard(
       tone: CardTone.night,
@@ -64,7 +63,10 @@ class RunStatusCard extends StatelessWidget {
                     const SizedBox(height: AppSpacing.s2),
                     Row(
                       children: [
-                        Text(IdFormat.clock(now), style: AppTypography.clock),
+                        Text(
+                          IdFormat.clock(day.minute),
+                          style: AppTypography.clock,
+                        ),
                         if (rush) ...[
                           const SizedBox(width: AppSpacing.s10),
                           const Flexible(

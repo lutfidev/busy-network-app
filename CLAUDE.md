@@ -88,12 +88,14 @@ Belum ada Flutter? `source scripts/setup_flutter.sh`.
   bersarang), `app.dart`, `game_session.dart` (`GameSession`: hari dioper
   dari Rancang/Tutorial ke Jalan & Antrean; tanpa hari → potret desain;
   `finish()` di 24:00 → `result`, dicatat ke `progress` hanya bila hari
-  dimulai lewat `begin`; juga membawa `feedback` & `settings`),
+  dimulai lewat `begin`; juga membawa `feedback`, `settings` & `music`),
   `progress_book.dart` (`ProgressBook`: progres yang dibaca Beranda/Peta,
   `record`/`completeTutorial`/`reset` lalu simpan), `settings_book.dart`
-  (`SettingsBook`: setelan suara & getar, ubah lalu simpan).
-- `lib/settings/` — `Settings` (murni): `sound`, `vibration`,
-  `encode`/`decode` JSON.
+  (`SettingsBook`: setelan suara, getar & musik, ubah lalu simpan).
+  `app.dart` juga meminta lagu santai untuk tiap rute di luar Fase Jalan
+  dan meneruskan lifecycle app ke musik.
+- `lib/settings/` — `Settings` (murni): `sound`, `vibration`, `music`,
+  `encode`/`decode` JSON (versi 2; versi 1 masih terbaca, musik nyala).
 - `lib/feedback/` — `Cue` (tap, connect, refuse, remove, complaint, win,
   fail), `GameFeedback.cue` (suara/getar sesuai setelan; keluaran
   disuntik: `AudioSoundOut` = `audioplayers` + `assets/audio/*.wav` hasil
@@ -101,6 +103,15 @@ Belum ada Flutter? `source scripts/setup_flutter.sh`.
   `FeedbackScope.of/cue/tap` (dipasang `JaringanSibukApp`; tanpa scope =
   diam). `NetworkGame.onCableDrop`/`onCableRemoved` → cue di
   `NetworkGameView`.
+- `lib/music/` — musik latar: `Track` (calm/tense; `Track.forDay` =
+  tegang selama `DaySim.inRush`), `BackgroundMusic` (di `GameSession`:
+  lagu yang diminta layar × setelan `music` × latar depan → `MusicOut`;
+  `request`, `endDay` = redup lalu lagu hasil menunggu bunyi menang/kalah,
+  `setForeground`; `MusicTiming`), `MusicOut` (default `SilentMusic`;
+  `AudioMusicOut` = `audioplayers` loop + fade lewat `Timer`, dipasang
+  `main()`). Lagu `assets/audio/music_*.wav` hasil `tool/make_music.py`
+  (berulang mulus). Fase Jalan meminta lagu dari jam hari. Test memakai
+  `RecordingMusic`/`musicSession` (`test/music/recording_music.dart`).
 - `lib/data/` — `dummy_states.dart` (potret `GameState` Tutorial (deep
   link `?langkah=`; tutorial yang dimainkan memakai satu state) & bingkai
   Fase Jalan desain, yang dihitung `DaySim` dari jam/sabar/komplain

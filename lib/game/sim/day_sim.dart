@@ -103,6 +103,9 @@ class DaySim {
   int get rushFrom => level.rushHourFrom ?? SimClock.defaultRushFrom;
   int get rushTo => level.rushHourTo ?? SimClock.defaultRushTo;
 
+  /// Jam sekarang di dalam jam sibuk ([rushFrom] ≤ jam < [rushTo]).
+  bool get inRush => minute >= rushFrom * 60 && minute < rushTo * 60;
+
   /// Maju [minutes] menit permainan; pecahan ditabung untuk panggilan
   /// berikutnya. Berhenti di akhir hari atau saat komplain muncul (sisa
   /// tabungan dibuang). `true` bila jam berubah.

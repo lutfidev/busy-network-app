@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 import '../data/settings_store.dart';
 import '../settings/settings.dart';
 
-/// Setelan pemain selama aplikasi berjalan: dibaca layar Pengaturan &
-/// `GameFeedback`, diubah lewat [setSound] / [setVibration] lalu disimpan.
+/// Setelan pemain selama aplikasi berjalan: dibaca layar Pengaturan,
+/// `GameFeedback` & `BackgroundMusic`, diubah lewat [setSound] /
+/// [setVibration] / [setMusic] lalu disimpan.
 /// Belum ada yang tersimpan → [Settings.initial].
 class SettingsBook extends ChangeNotifier {
   SettingsBook(this._store) : _settings = _store.load() ?? Settings.initial;
@@ -21,6 +22,8 @@ class SettingsBook extends ChangeNotifier {
 
   Future<void> setVibration(bool on) =>
       _update(_settings.copyWith(vibration: on));
+
+  Future<void> setMusic(bool on) => _update(_settings.copyWith(music: on));
 
   /// Gagal simpan tidak menghentikan permainan: setelan di memori tetap
   /// berlaku.

@@ -2,7 +2,6 @@ import 'package:busy_network/app/routes.dart';
 import 'package:busy_network/app/settings_book.dart';
 import 'package:busy_network/feedback/game_feedback.dart';
 import 'package:busy_network/game/levels/levels.dart';
-import 'package:busy_network/game/model/model.dart';
 import 'package:busy_network/screens/result_fail/result_fail_screen.dart';
 import 'package:busy_network/screens/result_success/result_success_screen.dart';
 import 'package:busy_network/settings/settings.dart';
@@ -22,16 +21,6 @@ final _failingCables = [
   ...Levels.level5.cables,
   designCables.firstWhere((c) => c.id == 'c-r5'),
 ];
-
-/// Majukan [game] sampai [minute], komplain langsung dijawab.
-GameState _playUntil(GameState game, int minute) {
-  while (game.day!.minute < minute) {
-    game.dismissComplaint();
-    game.advanceDay(0.05);
-  }
-  game.dismissComplaint();
-  return game;
-}
 
 void main() {
   setUpFonts();
@@ -113,7 +102,7 @@ void main() {
   testWidgets('komplain baru berbunyi sekali', (tester) async {
     setScreenSize(tester, const Size(390, 844));
     final out = RecordingFeedback();
-    final day = _playUntil(designDay(_failingCables), 17 * 60);
+    final day = playUntil(designDay(_failingCables), 17 * 60);
     final session = recordingSession(out)..begin(day);
     await pumpApp(
       tester,
@@ -135,13 +124,13 @@ void main() {
     setScreenSize(tester, const Size(390, 844));
     // Hari sama persis (deterministik): cari menit komplain pertama setelah
     // 17:00, lalu buka layar semenit sebelumnya.
-    final probe = _playUntil(designDay(_failingCables), 17 * 60);
+    final probe = playUntil(designDay(_failingCables), 17 * 60);
     while (probe.day!.complaint == null) {
       probe.advanceDay(0.05);
     }
     final minute = probe.day!.complaint!.minute;
     final out = RecordingFeedback();
-    final day = _playUntil(designDay(_failingCables), minute - 1);
+    final day = playUntil(designDay(_failingCables), minute - 1);
     expect(day.day!.complaint, isNull);
     final session = recordingSession(out)..begin(day);
     await pumpApp(
@@ -170,7 +159,7 @@ void main() {
       setScreenSize(tester, const Size(390, 844));
       final out = RecordingFeedback();
       final session = recordingSession(out)
-        ..begin(_playUntil(designDay(cables), 23 * 60 + 50));
+        ..begin(playUntil(designDay(cables), 23 * 60 + 50));
       await pumpApp(
         tester,
         location: AppRoutes.runOf(5),

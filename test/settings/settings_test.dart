@@ -17,9 +17,10 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Settings', () {
-    test('awal: suara & getar nyala', () {
+    test('awal: suara, getar & musik nyala', () {
       expect(Settings.initial.sound, isTrue);
       expect(Settings.initial.vibration, isTrue);
+      expect(Settings.initial.music, isTrue);
     });
 
     test('encode → decode sama', () {
@@ -28,6 +29,8 @@ void main() {
         Settings(sound: false),
         Settings(vibration: false),
         Settings(sound: false, vibration: false),
+        Settings(music: false),
+        Settings(sound: false, vibration: false, music: false),
       ]) {
         expect(Settings.decode(s.encode()), s);
       }
@@ -38,12 +41,21 @@ void main() {
         null,
         '{rusak',
         '[]',
+        '{"versi":3,"suara":true,"getar":true,"musik":true}',
         '{"versi":2,"suara":true,"getar":true}',
+        '{"versi":2,"suara":true,"getar":true,"musik":"ya"}',
         '{"versi":1,"suara":"ya","getar":true}',
         '{"versi":1,"suara":true}',
       ]) {
         expect(Settings.decode(source), isNull, reason: '$source');
       }
+    });
+
+    test('versi 1 tetap terbaca, musik nyala', () {
+      expect(
+        Settings.decode('{"versi":1,"suara":false,"getar":true}'),
+        const Settings(sound: false),
+      );
     });
   });
 
@@ -88,6 +100,13 @@ void main() {
       expect(notified, 2);
       await book.setVibration(false);
       expect(notified, 2);
+      await book.setMusic(false);
+      expect(book.settings.music, isFalse);
+      expect(
+        store.load(),
+        const Settings(sound: false, vibration: false, music: false),
+      );
+      expect(notified, 3);
     });
 
     test('gagal simpan: setelan di memori tetap berlaku', () async {

@@ -79,6 +79,16 @@ class SettingsScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         _SwitchRow(
+                          icon: GameIcons.music,
+                          title: 'Musik',
+                          subtitle:
+                              'Lagu santai di menu, lebih tegang saat jam '
+                              'sibuk.',
+                          value: s.music,
+                          onChanged: settings.setMusic,
+                        ),
+                        const _Divider(),
+                        _SwitchRow(
                           icon: GameIcons.sound,
                           title: 'Efek suara',
                           subtitle:

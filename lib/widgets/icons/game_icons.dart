@@ -108,6 +108,13 @@ abstract final class GameIcons {
     IconShape.path('M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6a8.5 8.5 0 0 1 0 12'),
   ], strokeWidth: 2.2);
 
+  /// Pengaturan (tidak ada di desain): not balok.
+  static const music = GameIconData([
+    IconShape.path('M9 17.5V5.5l10-2v12'),
+    IconShape.circle(Offset(6.5, 17.5), 2.5),
+    IconShape.circle(Offset(16.5, 15.5), 2.5),
+  ], strokeWidth: 2.2);
+
   /// Pengaturan (tidak ada di desain): ponsel bergetar.
   static const vibrate = GameIconData([
     IconShape.rect(

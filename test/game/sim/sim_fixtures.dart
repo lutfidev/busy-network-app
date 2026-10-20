@@ -44,3 +44,13 @@ GameState playDay(GameState game) {
   }
   return game;
 }
+
+/// Majukan [game] sampai [minute], komplain langsung dijawab.
+GameState playUntil(GameState game, int minute) {
+  while (game.day!.minute < minute) {
+    game.dismissComplaint();
+    game.advanceDay(0.05);
+  }
+  game.dismissComplaint();
+  return game;
+}

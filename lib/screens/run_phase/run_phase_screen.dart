@@ -12,6 +12,7 @@ import '../../game/map_scene.dart';
 import '../../game/model/model.dart';
 import '../../game/network_game_view.dart';
 import '../../game/sim/sim.dart';
+import '../../music/track.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'complaint_popup.dart';
@@ -24,6 +25,9 @@ import 'run_status_card.dart';
 /// transisinya selesai), saat back, dan saat app di latar belakang.
 /// Komplain menjeda hari sampai dijawab. Tombol back = hari dibatalkan,
 /// kembali ke Fase Rancang. 24:00 → layar hasil.
+///
+/// Musik mengikuti jam hari: santai, tegang selama jam sibuk, lalu meredup
+/// di 24:00.
 class RunPhaseScreen extends StatefulWidget {
   const RunPhaseScreen({super.key, required this.session});
 
@@ -55,6 +59,7 @@ class _RunPhaseScreenState extends State<RunPhaseScreen>
     super.initState();
     _heardComplaint = _day.complaint;
     _game.addListener(_onGameChanged);
+    _requestMusic();
   }
 
   @override
@@ -89,6 +94,7 @@ class _RunPhaseScreenState extends State<RunPhaseScreen>
     }
     _heardComplaint = complaint;
     _syncClock();
+    _requestMusic();
     if (_game.phase == GamePhase.result) _finish();
     setState(() {});
   }
@@ -107,11 +113,17 @@ class _RunPhaseScreenState extends State<RunPhaseScreen>
     }
   }
 
+  void _requestMusic() {
+    if (_game.phase != GamePhase.run) return;
+    widget.session.music.request(Track.forDay(_day));
+  }
+
   /// Hari selesai: catat hasilnya, lalu layar berhasil bila lulus.
   void _finish() {
     if (_finished) return;
     _finished = true;
     final result = widget.session.finish();
+    widget.session.music.endDay();
     FeedbackScope.cue(context, result.passed ? Cue.win : Cue.fail);
     context.go(result.passed ? AppRoutes.success : AppRoutes.fail);
   }
@@ -146,7 +158,12 @@ class _RunPhaseScreenState extends State<RunPhaseScreen>
         : _game.level.house(complaint.houseId);
     return PopScope(
       onPopInvokedWithResult: (didPop, _) {
-        if (didPop) widget.session.abandon(_game);
+        if (!didPop) return;
+        // Jam berhenti sekarang juga, bukan setelah transisi keluar: hari
+        // yang dibatalkan tidak boleh maju (dan meminta musik) lagi.
+        _onTop = false;
+        _syncClock();
+        widget.session.abandon(_game);
       },
       child: Scaffold(
         backgroundColor: AppColors.groundNight,

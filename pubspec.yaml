@@ -31,7 +31,8 @@ flutter:
     # Font Fredoka & Nunito dibundel supaya google_fonts tidak perlu
     # mengunduh saat runtime (offline-friendly, dan test jadi deterministik).
     - assets/google_fonts/
-    # Efek suara, disintesis `tool/make_sounds.py`.
+    # Efek suara & musik latar, disintesis `tool/make_sounds.py` &
+    # `tool/make_music.py`.
     - assets/audio/
 
 # Ikon launcher & splash dari glyph logo (gambar: test/tool/brand_test.dart).

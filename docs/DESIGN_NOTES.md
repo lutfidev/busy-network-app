@@ -38,6 +38,13 @@ Gagal · Design token & komponen.
 - **Suara & getar** tidak ada di desain: efek suara disintesis
   (`tool/make_sounds.py`), dipicu tombol, kabel terpasang/ditolak/dibongkar,
   komplain baru, dan akhir hari (lulus/gagal).
+- **Musik latar** tidak ada di desain (rincian di
+  `docs/superpowers/specs/2026-10-17-musik-latar-design.md`): dua lagu
+  disintesis `tool/make_music.py`, santai (C mayor, 90 bpm) di semua layar
+  dan tegang (A minor, 120 bpm, bas berdenyut) di Fase Jalan selama jam
+  sibuk level itu, crossfade 1 detik; 24:00 meredup supaya bunyi hasil
+  terdengar. Volume 40%. Sakelar "Musik" (ikon not balok, digambar baru)
+  di atas "Efek suara" di Pengaturan.
 - **Peta Babak dari progres**: permainan mulai dari progres kosong
   (`Progress.empty`); potret desain (level 1–4 selesai 3/2/3/1★, level 5
   sekarang) = `DummyData.designProgress`, hanya untuk screenshot & test.
